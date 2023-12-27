@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
-	"os"
 
+	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/vinialeixo/crud-golang/src/controller/routes"
 )
 
 func main() {
@@ -14,7 +14,10 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	s3Bucket := os.Getenv("TESTE")
-	// secretKey := os.Getenv("SECRET_KEY")
-	fmt.Println(s3Bucket)
+	router := gin.Default()
+	routes.InitRouters(&router.RouterGroup)
+
+	if err := router.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 }
