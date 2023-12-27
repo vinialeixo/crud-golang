@@ -1,9 +1,9 @@
 package dto
 
 type UserRequest struct {
-	ID       string `json:"id"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	Name     string `json:"name"`
-	Age      int8   `json:"age"`
+	ID       string `json:"id" `
+	Password string `json:"password" binding:"required,min=6,containsany=!@#$%*"`
+	Email    string `json:"email" binding:"required,email"`
+	Name     string `json:"name" binding:"required,min=4,max=100"`
+	Age      int8   `json:"age" binding:"required,min=1,max=140"`
 }
