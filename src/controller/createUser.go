@@ -8,6 +8,7 @@ import (
 	"github.com/vinialeixo/crud-golang/src/controller/dto"
 	"github.com/vinialeixo/crud-golang/src/controller/validation"
 	"github.com/vinialeixo/crud-golang/src/model"
+	"github.com/vinialeixo/crud-golang/src/model/service"
 	"go.uber.org/zap"
 )
 
@@ -37,7 +38,9 @@ func CreateUser(c *gin.Context) {
 		userRequest.Name,
 		userRequest.Age,
 	)
-	if err := domain.CreateUser(); err != nil {
+	//passando interfaces ao inves de objetos
+	service := service.NewUserDomainService()
+	if err := service.CreateUser(domain); err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
