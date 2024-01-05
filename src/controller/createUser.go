@@ -5,10 +5,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/vinialeixo/crud-golang/src/configuration/logger"
-	"github.com/vinialeixo/crud-golang/src/controller/dto"
+	dto_request "github.com/vinialeixo/crud-golang/src/controller/dto/request"
 	"github.com/vinialeixo/crud-golang/src/controller/validation"
 	"github.com/vinialeixo/crud-golang/src/model"
-	"github.com/vinialeixo/crud-golang/src/model/service"
+	"github.com/vinialeixo/crud-golang/src/view"
 	"go.uber.org/zap"
 )
 
@@ -16,10 +16,10 @@ var (
 	UserDomainInterface model.UserDomainInterface
 )
 
-func CreateUser(c *gin.Context) {
+func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 
 	logger.Info("Init CreateUser controller", zap.String("journey", "createUser"))
-	var userRequest dto.UserRequest
+	var userRequest dto_request.UserRequest
 
 	//&userRequest To be able to modify the original userRequest variable (defined outside the function) with the data from the request,
 	//you need to pass a pointer to that variable
@@ -39,15 +39,20 @@ func CreateUser(c *gin.Context) {
 		userRequest.Age,
 	)
 	//passando interfaces ao inves de objetos
-	service := service.NewUserDomainService()
-	if err := service.CreateUser(domain); err != nil {
+
+	if err := uc.service.CreateUser(domain); err != nil {
 		c.JSON(err.Code, err)
 		return
 	}
 
 	logger.Info("User created successfully",
-		zap.String("journey", "createUser"))
+		zap.String("journey", "createUser"),
+		zap.String("username", domain.GetName()),
+		zap.String("email", domain.GetEmail()),
+	)
 
-	c.String(http.StatusOK, "")
+	c.JSON(http.StatusOK, view.ConvertDomainToResponse(
+		domain,
+	))
 
 }
