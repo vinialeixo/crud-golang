@@ -40,8 +40,9 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	)
 	//passando interfaces ao inves de objetos
 
-	if err := uc.service.CreateUser(domain); err != nil {
-		c.JSON(err.Code, err)
+	domainResult, errs := uc.service.CreateUser(domain)
+	if errs != nil {
+		c.JSON(errs.Code, errs)
 		return
 	}
 
@@ -52,7 +53,7 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	)
 
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(
-		domain,
+		domainResult,
 	))
 
 }

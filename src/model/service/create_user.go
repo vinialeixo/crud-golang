@@ -1,15 +1,13 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/vinialeixo/crud-golang/src/configuration/logger"
 	"github.com/vinialeixo/crud-golang/src/configuration/rest_err"
 	"github.com/vinialeixo/crud-golang/src/model"
 	"go.uber.org/zap"
 )
 
-func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) *rest_err.RestErr {
+func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_err.RestErr) {
 
 	logger.Info("Init createUser model", zap.String("journey", "createUser"))
 
@@ -20,6 +18,10 @@ func (ud *userDomainService) CreateUser(userDomain model.UserDomainInterface) *r
 	//mesmo conversando interfaces entre as nossas camadas, consegue pegar os valores lá de dentro.
 	//não precisa deixar o model publico, podemos deixar controlavel. Disponibiliza os metodos que nós queremos
 	//mas não disponibilza os objetos para ser alterado
-	fmt.Println(userDomain.GetPassword())
-	return nil
+	userDomainRepository, err := ud.userRepository.CreteUser(userDomain)
+	if err != nil {
+		return nil, err
+	}
+
+	return userDomainRepository, nil
 }
