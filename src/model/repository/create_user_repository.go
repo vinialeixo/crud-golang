@@ -9,6 +9,7 @@ import (
 	"github.com/vinialeixo/crud-golang/src/model"
 	"github.com/vinialeixo/crud-golang/src/model/repository/entity/converter"
 	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.uber.org/zap"
 )
 
 const (
@@ -26,6 +27,7 @@ func (ur *userRepository) CreteUser(userDomain model.UserDomainInterface) (model
 
 	result, err := collection.InsertOne(context.Background(), value)
 	if err != nil {
+		logger.Error("Error trying to create user", err, zap.String("journey", "createUser"))
 		return nil, rest_err.NewInternalServerError(err.Error())
 	}
 
