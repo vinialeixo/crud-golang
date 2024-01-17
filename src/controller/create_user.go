@@ -40,7 +40,7 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	)
 	//passando interfaces ao inves de objetos
 
-	domainResult, errs := uc.service.CreateUser(domain)
+	domainResult, errs := uc.service.CreateUserService(domain)
 	if errs != nil {
 		logger.Error("Error trying to call CreateUser service", err, zap.String("journey", "createUser"))
 		c.JSON(errs.Code, errs)
