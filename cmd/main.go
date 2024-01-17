@@ -8,7 +8,11 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/vinialeixo/crud-golang/src/configuration/db/mongodb"
 	"github.com/vinialeixo/crud-golang/src/configuration/logger"
+	"github.com/vinialeixo/crud-golang/src/controller"
 	"github.com/vinialeixo/crud-golang/src/controller/routes"
+	"github.com/vinialeixo/crud-golang/src/model/repository"
+	"github.com/vinialeixo/crud-golang/src/model/service"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 func main() {
@@ -32,4 +36,11 @@ func main() {
 	if err := router.Run(":8080"); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func initDependencies(database *mongo.Database) controller.UserControllerInterface {
+	//Init dependices
+	repo := repository.NewUserRepository(database)
+	service := service.NewUserDomainService(repo)
+	return controller.NewUserControllerInterface(service)
 }
