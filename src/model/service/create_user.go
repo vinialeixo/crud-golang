@@ -20,9 +20,14 @@ func (ud *userDomainService) CreateUserService(userDomain model.UserDomainInterf
 	//mas não disponibilza os objetos para ser alterado
 	userDomainRepository, err := ud.userRepository.CreteUser(userDomain)
 	if err != nil {
-		logger.Error("Init createUser model", err, zap.String("journey", "createUser"))
+		logger.Error("Init trying to call repository", err, zap.String("journey", "createUser"))
 		return nil, err
 	}
+
+	logger.Info(
+		"CreateUser service executed successfully",
+		zap.String("userId", userDomainRepository.GetID()),
+		zap.String("journey", "createUser"))
 
 	return userDomainRepository, nil
 }

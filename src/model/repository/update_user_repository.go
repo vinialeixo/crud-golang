@@ -8,32 +8,33 @@ import (
 	"github.com/vinialeixo/crud-golang/src/configuration/rest_err"
 	"github.com/vinialeixo/crud-golang/src/model"
 	"github.com/vinialeixo/crud-golang/src/model/repository/entity/converter"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.uber.org/zap"
 )
 
-func (ur *userRepository) CreteUser(userDomain model.UserDomainInterface) (model.UserDomainInterface, *rest_err.RestErr) {
+func (ur *userRepository) UpdateUser(userId string, userDomain model.UserDomainInterface) *rest_err.RestErr {
 
 	logger.Info("Init CreteUser repository",
 		zap.String("journey", "CreteUser"))
 	collection_name := os.Getenv(MONGODB_USER_COLLECTION)
-
 	collection := ur.dataBaseConnection.Collection(collection_name)
 
 	value := converter.ConvertDomainToEntity(userDomain)
+	userIdHex, _ := primitive.ObjectIDFromHex(userId)
 
-	result, err := collection.InsertOne(context.Background(), value)
+	filter := bson.D{{Key: "_id", Value: userIdHex}}
+	update := bson.D{{Key: "$set", Value: value}}
+	_, err := collection.UpdateOne(context.Background(), filter, update)
 	if err != nil {
-		logger.Error("Error trying to create user", err, zap.String("journey", "createUser"))
-		return nil, rest_err.NewInternalServerError(err.Error())
+		logger.Error("Error trying to update user", err, zap.String("journey", "createUser"))
+		return nil
 	}
-
-	value.ID = result.InsertedID.(primitive.ObjectID)
 
 	logger.Info(
 		"updateUser repository executed successfully",
-		zap.String("userId", value.ID.Hex()),
+		zap.String("userId", userId),
 		zap.String("journey", "updateUser"))
 
-	return converter.ConvertEntityToDomain(*value), nil
+	return nil
 }

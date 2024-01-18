@@ -24,7 +24,7 @@ func (uc *userControllerInterface) CreateUser(c *gin.Context) {
 	//&userRequest To be able to modify the original userRequest variable (defined outside the function) with the data from the request,
 	//you need to pass a pointer to that variable
 	//By using &userRequest, you are passing the memory address of the userRequest variable to the ShouldBind function. This allows ShouldBind to modify the actual variable's content,
-	err := c.ShouldBind(&userRequest)
+	err := c.ShouldBindJSON(&userRequest)
 	if err != nil {
 		logger.Error("Error trying to validate user info ", err, zap.String("journey", "createUser")) //string message
 		errRest := validation.ValidateUserError(err)
