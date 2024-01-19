@@ -34,7 +34,6 @@ func NewRestErr(message, err string, code int, causes []Causes) *RestErr {
 }
 
 // creating methods to each error type:
-
 func NewBadRequestError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
@@ -70,7 +69,7 @@ func NewNotFoundError(message string) *RestErr {
 	}
 }
 
-func NewFobiddenError(message string) *RestErr {
+func NewForbiddenError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "internal_server_error",

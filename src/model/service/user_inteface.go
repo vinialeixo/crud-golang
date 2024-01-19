@@ -24,5 +24,5 @@ type UserDomainService interface {
 	FindUserByEmailServices(email string) (model.UserDomainInterface, *rest_err.RestErr) //pq *UserDomain se caso der erro, não posso retornar objeto vazio, pq objeto vazio é diferente de nulo. Nulo quer dizer que dá erro
 	FindUserByIDServices(id string) (model.UserDomainInterface, *rest_err.RestErr)
 	UpdateUserService(string, model.UserDomainInterface) *rest_err.RestErr
-	DeleteUser(string) *rest_err.RestErr
+	DeleteUserService(string) *rest_err.RestErr
 }

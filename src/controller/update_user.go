@@ -41,9 +41,7 @@ func (uc *userControllerInterface) UpdateUser(c *gin.Context) {
 
 	logger.Info("User updated successfully",
 		zap.String("journey", "updateUser"),
-		zap.String("username", domain.GetName()),
-		zap.String("userId", domain.GetID()),
-	)
+		zap.String("userID", userId))
 
 	c.Status(http.StatusOK)
 }
