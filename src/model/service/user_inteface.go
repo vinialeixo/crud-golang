@@ -25,4 +25,5 @@ type UserDomainService interface {
 	FindUserByIDServices(id string) (model.UserDomainInterface, *rest_err.RestErr)
 	UpdateUserService(string, model.UserDomainInterface) *rest_err.RestErr
 	DeleteUserService(string) *rest_err.RestErr
+	LoginUserService(model.UserDomainInterface) (model.UserDomainInterface, *rest_err.RestErr)
 }

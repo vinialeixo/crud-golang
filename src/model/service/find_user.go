@@ -34,3 +34,17 @@ func (ud *userDomainService) FindUserByIDServices(id string) (model.UserDomainIn
 
 	return userID, nil
 }
+
+func (ud *userDomainService) findUserByEmailAndPasswordServices(email string, password string) (model.UserDomainInterface, *rest_err.RestErr) {
+	//conectar service no repository
+	logger.Info("Init findUserByEmailAndPasswordServices services", zap.String("journey", "FindUserByEmail"))
+
+	userEmail, err := ud.userRepository.FindUserByEmailAndPassword(email, password)
+	//conectar o controler no service
+	if err != nil {
+		logger.Error("Init findUserByEmailAndPasswordServices model", err, zap.String("journey", "FindUserByEmail"))
+		return nil, err
+	}
+
+	return userEmail, nil
+}
