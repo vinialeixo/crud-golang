@@ -1,16 +1,18 @@
 package model
 
+import "github.com/vinialeixo/crud-golang/src/configuration/rest_err"
+
 type UserDomainInterface interface {
 	GetEmail() string
 	GetPassword() string
 	GetAge() int8
 	GetName() string
 	GetID() string
-	//GetJSONValue() (string, error)
 
 	SetID(string)
 
 	EncryptPassword()
+	GenerateToken() (string, *rest_err.RestErr)
 }
 
 // NewUserDomain constructor
