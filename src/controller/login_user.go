@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -15,10 +16,10 @@ import (
 func (uc *userControllerInterface) LoginUser(c *gin.Context) {
 
 	logger.Info("Init loginUser controller", zap.String("journey", "loginUser"))
+
 	var userRequest dto_request.UserLogin
 
-	err := c.ShouldBindJSON(&userRequest)
-	if err != nil {
+	if err := c.ShouldBindJSON(&userRequest); err != nil {
 		logger.Error("Error trying to validate user info ", err, zap.String("journey", "loginUser")) //string message
 		errRest := validation.ValidateUserError(err)
 
@@ -31,10 +32,10 @@ func (uc *userControllerInterface) LoginUser(c *gin.Context) {
 	)
 	//passando interfaces ao inves de objetos
 
-	domainResult, token, errs := uc.service.LoginUserService(domain)
-	if errs != nil {
+	domainResult, token, err := uc.service.LoginUserService(domain)
+	if err != nil {
 		logger.Error("Error trying to call loginUser service", err, zap.String("journey", "loginUser"))
-		c.JSON(errs.Code, errs)
+		c.JSON(err.Code, err)
 		return
 	}
 
@@ -42,6 +43,7 @@ func (uc *userControllerInterface) LoginUser(c *gin.Context) {
 		zap.String("journey", "loginUser"),
 		zap.String("userId", domain.GetID()),
 	)
+	fmt.Println(token)
 
 	c.Header("Authorization", token)
 	c.JSON(http.StatusOK, view.ConvertDomainToResponse(
