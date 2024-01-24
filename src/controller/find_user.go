@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/vinialeixo/crud-golang/src/configuration/logger"
 	"github.com/vinialeixo/crud-golang/src/configuration/rest_err"
-	"github.com/vinialeixo/crud-golang/src/model"
 	"github.com/vinialeixo/crud-golang/src/view"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -17,12 +16,6 @@ import (
 
 func (uc *userControllerInterface) FindUserById(c *gin.Context) {
 	logger.Info("Init findUserById controller", zap.String("journey", "findUserById"))
-
-	user, err := model.VerifyToken(c.Request.Header.Get("Authorization"))
-	if err != nil {
-		c.JSON(err.Code, err)
-	}
-	logger.Info(fmt.Sprintf("User authenticated: %v", user))
 
 	userId := c.Param("userId")
 	fmt.Println(userId)
@@ -51,12 +44,6 @@ func (uc *userControllerInterface) FindUserById(c *gin.Context) {
 func (uc *userControllerInterface) FindUserByEmail(c *gin.Context) {
 
 	logger.Info("Init findUserByEmail controller", zap.String("journey", "findUserByEmail"))
-
-	user, err := model.VerifyToken(c.Request.Header.Get("Authorization"))
-	if err != nil {
-		c.JSON(err.Code, err)
-	}
-	logger.Info(fmt.Sprintf("User authenticated: %v", user))
 
 	userEmail := c.Param("userEmail")
 

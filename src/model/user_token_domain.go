@@ -6,7 +6,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt"
+	"github.com/vinialeixo/crud-golang/src/configuration/logger"
 	"github.com/vinialeixo/crud-golang/src/configuration/rest_err"
 )
 
@@ -39,36 +41,46 @@ func (ud *userDomain) GenerateToken() (string, *rest_err.RestErr) {
 	return tokenString, nil
 }
 
-func VerifyToken(tokenValue string) (UserDomainInterface, *rest_err.RestErr) {
+func VerifyTokenMiddleware(c *gin.Context) {
 	secret := os.Getenv(JWT_SECRET_KEY)
+	tokenValue := removerBearerToken(c.Request.Header.Get("Authorization"))
 
-	token, err := jwt.Parse(removerBearerToken(tokenValue), func(token *jwt.Token) (interface{}, error) {
+	token, err := jwt.Parse(tokenValue, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); ok {
 			return []byte(secret), nil
 		}
 		return nil, rest_err.NewBadRequestError("invalid token")
 	})
 	if err != nil {
-		return nil, rest_err.NewUnauthorizedRequestError("invalid token")
+		errRest := rest_err.NewUnauthorizedRequestError("invalid token")
+		c.JSON(errRest.Code, errRest)
+		c.Abort()
+		return
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		return nil, rest_err.NewUnauthorizedRequestError("invalid token")
+		errRest := rest_err.NewUnauthorizedRequestError("invalid token")
+		c.JSON(errRest.Code, errRest)
+		c.Abort()
+		return
 	}
 
-	return &userDomain{
+	userDomain := userDomain{
 		id:    claims["id"].(string),
 		email: claims["email"].(string),
 		name:  claims["name"].(string),
 		age:   int8(claims["age"].(float64)),
-	}, nil
+	}
+	logger.Info(fmt.Sprintf("User authenticated: %#v", userDomain))
 }
 
 // TODO não está funcionando o Bearer, verificar
 func removerBearerToken(token string) string {
-	if strings.HasPrefix("Bearer ", token) {
-		token = strings.TrimPrefix("Bearer ", token)
+	if strings.HasPrefix(token, "Bearer ") {
+		fmt.Printf("-----------")
+		fmt.Println("aqui", token)
+		token = strings.TrimPrefix(token, "Bearer ")
 	}
 	return token
 }
