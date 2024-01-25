@@ -46,4 +46,5 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		assert.EqualValues(t, userDomain.GetEmail(), email)
 		assert.EqualValues(t, userDomain.GetName(), name)
 	})
+
 }
