@@ -7,6 +7,7 @@ import (
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/stretchr/testify/assert"
 	"github.com/vinialeixo/crud-golang/src/model"
+	"github.com/vinialeixo/crud-golang/src/model/repository"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 
@@ -34,7 +35,7 @@ func TestUserRepository_CreateUser(t *testing.T) {
 		})
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.CreteUser(model.NewUserDomain(
 			email, "teste", name, 18))

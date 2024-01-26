@@ -7,6 +7,7 @@ import (
 
 	"github.com/brianvoe/gofakeit/v6"
 	"github.com/stretchr/testify/assert"
+	"github.com/vinialeixo/crud-golang/src/model/repository"
 	"github.com/vinialeixo/crud-golang/src/model/repository/entity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -38,7 +39,7 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 		userDomain, err := repo.FindUserByEmail(userEntity.Email)
 		assert.Nil(t, err)
 		assert.EqualValues(t, userDomain.GetID(), userEntity.ID.Hex())
@@ -54,7 +55,7 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 		})
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.FindUserByEmail("teste")
 
@@ -71,7 +72,7 @@ func TestUserRepository_FindUserByEmail(t *testing.T) {
 			fmt.Sprintf("%s.%s", database_name, collection_name), mtest.FirstBatch))
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.FindUserByEmail("teste")
 
@@ -116,7 +117,7 @@ func TestUserRepository_FindUserByID(t *testing.T) {
 
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 		userDomain, err := repo.FindUserByID(userEntity.ID.Hex())
 		assert.Nil(t, err)
 		assert.EqualValues(t, userDomain.GetID(), userEntity.ID.Hex())
@@ -132,7 +133,7 @@ func TestUserRepository_FindUserByID(t *testing.T) {
 		})
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.FindUserByID("teste")
 
@@ -149,7 +150,7 @@ func TestUserRepository_FindUserByID(t *testing.T) {
 			fmt.Sprintf("%s.%s", database_name, collection_name), mtest.FirstBatch))
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.FindUserByID("teste")
 
@@ -184,7 +185,7 @@ func TestUserRepository_FindUserByEmailAndPassowrd(t *testing.T) {
 
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 		userDomain, err := repo.FindUserByEmailAndPassword(userEntity.Email, userEntity.Password)
 		assert.Nil(t, err)
 		assert.EqualValues(t, userDomain.GetID(), userEntity.ID.Hex())
@@ -200,7 +201,7 @@ func TestUserRepository_FindUserByEmailAndPassowrd(t *testing.T) {
 		})
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.FindUserByEmailAndPassword("teste", "testepass")
 
@@ -217,7 +218,7 @@ func TestUserRepository_FindUserByEmailAndPassowrd(t *testing.T) {
 			fmt.Sprintf("%s.%s", database_name, collection_name), mtest.FirstBatch))
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
 
 		userDomain, err := repo.FindUserByEmailAndPassword("teste", "testepass")
 

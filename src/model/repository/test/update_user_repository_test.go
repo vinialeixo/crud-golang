@@ -5,11 +5,14 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/vinialeixo/crud-golang/src/model"
+	"github.com/vinialeixo/crud-golang/src/model/repository"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/integration/mtest"
 )
 
-func TestUserRepository_DeleteUser(t *testing.T) {
+func TestUserRepository_UpdateUser(t *testing.T) {
 	database_name := "user_database_test"
 	collection_name := "user_collection_test"
 
@@ -19,7 +22,7 @@ func TestUserRepository_DeleteUser(t *testing.T) {
 	mtestDb := mtest.New(t, mtest.NewOptions().ClientType(mtest.Mock))
 	//defer mtestDb.Close()
 
-	mtestDb.Run("when sending a valid userId return success", func(mt *mtest.T) {
+	mtestDb.Run("when sending a valid user return success", func(mt *mtest.T) {
 
 		//resposta de sucesso do banco de dados
 		mt.AddMockResponses(bson.D{
@@ -29,9 +32,13 @@ func TestUserRepository_DeleteUser(t *testing.T) {
 		})
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
+		repo := repository.NewUserRepository(databaseMock)
+		userDomain := model.NewUserDomain(
+			"email", "teste", "name", 18)
 
-		err := repo.DeleteUser("teste")
+		userDomain.SetID(string(primitive.NewObjectID().Hex()))
+
+		err := repo.UpdateUser(userDomain.GetID(), userDomain)
 
 		assert.Nil(t, err)
 
@@ -45,11 +52,15 @@ func TestUserRepository_DeleteUser(t *testing.T) {
 		})
 		databaseMock := mt.Client.Database(database_name)
 
-		repo := NewUserRepository(databaseMock)
-		err := repo.DeleteUser("teste")
+		repo := repository.NewUserRepository(databaseMock)
+		userDomain := model.NewUserDomain(
+			"email", "teste", "name", 18)
 
-		assert.NotNil(t, err)
+		userDomain.SetID(string(primitive.NewObjectID().Hex()))
+
+		err := repo.UpdateUser(userDomain.GetID(), userDomain)
+
+		assert.Nil(t, err)
 
 	})
-
 }
